@@ -43,7 +43,7 @@
   ],
   "sign": {
     "lang": "asl",
-    "src": "https://abol-learning.vercel.app/sign/asl-alphabet.webm",
+    "src": "./asl-alphabet.webm",
     "placeholder": true
   },
   "transcript": {
