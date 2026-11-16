@@ -3,22 +3,51 @@
   "title": "AbolKit accessibility showcase lesson",
   "lang": "en",
   "media": {
-    "video": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm",
+    "video": "https://www.youtube.com/watch?v=HisYsqqszq0",
     "audio": "https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3",
     "poster": "https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice.jpg"
   },
   "captions": [
-    { "lang": "en", "label": "English", "src": "./captions-en.vtt", "default": true },
-    { "lang": "am", "label": "Amharic", "src": "./captions-am.vtt" }
+    {
+      "lang": "en",
+      "label": "English",
+      "src": "../hisys-story-en.vtt",
+      "default": true
+    },
+    {
+      "lang": "am",
+      "label": "Amharic",
+      "src": "../hisys-story-am.vtt"
+    },
+    {
+      "lang": "om",
+      "label": "Afaan Oromo",
+      "src": "../hisys-story-om.vtt"
+    },
+    {
+      "lang": "ti",
+      "label": "Tigrinya",
+      "src": "../hisys-story-ti.vtt"
+    },
+    {
+      "lang": "aa",
+      "label": "Afar",
+      "src": "../hisys-story-aa.vtt"
+    }
   ],
   "descriptions": [
-    { "lang": "en", "src": "./ad-en.vtt" }
+    {
+      "lang": "en",
+      "src": "./ad-en.vtt"
+    }
   ],
   "sign": {
     "lang": "ets",
     "src": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
     "placeholder": true
   },
-  "transcript": { "src": "./transcript.html" },
+  "transcript": {
+    "src": "./transcript.html"
+  },
   "offlinePack": "./offline-pack-note.txt"
 }
