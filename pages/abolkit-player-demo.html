@@ -48,8 +48,6 @@
         margin: 0.75rem 0 1.25rem;
       }
     </style>
-    <!-- Documented CDN install: https://abolkit.vercel.app/install/player/ — pin @0.1.1 -->
-    <script src="https://cdn.jsdelivr.net/npm/@abolkit/player@0.1.1/dist/abol-player.js"></script>
   </head>
   <body class="bg-body-tertiary">
     <main class="container-lg demo-wrap">
@@ -59,8 +57,9 @@
 
       <h1 class="mb-1">AbolKit player</h1>
       <p class="text-body-secondary mb-4">
-        Demonstration of the published <code>&lt;abol-player&gt;</code> web component inside the ALX
-        Savanna static pages starter — no custom player build and no application backend.
+        CDN quickstart from
+        <a href="https://abolkit.vercel.app/getting-started/#player-cdn">abolkit.vercel.app/getting-started</a>
+        (pin <code>@0.1.1</code>), embedded in the Savanna static pages starter.
       </p>
 
       <section class="mb-4" aria-labelledby="about-heading">
@@ -112,11 +111,13 @@
           Package:
           <a href="https://www.npmjs.com/package/@abolkit/player">@abolkit/player@0.1.1</a>
           · Docs:
-          <a href="https://abolkit.vercel.app/install/player/">abolkit.vercel.app</a>
+          <a href="https://abolkit.vercel.app/getting-started/#player-cdn">Getting started (CDN)</a>
         </p>
       </section>
     </main>
 
+    <!-- Official Player (CDN) quickstart: https://abolkit.vercel.app/getting-started/#player-cdn -->
+    <script src="https://cdn.jsdelivr.net/npm/@abolkit/player@0.1.1/dist/abol-player.js"></script>
     <script>
       ;(function () {
         var statusEl = document.getElementById('player-status')
@@ -160,7 +161,6 @@
           player.seek(3)
         })
 
-        // Fallback if abol:ready is delayed
         setTimeout(function () {
           if (!ready && !statusEl.classList.contains('err')) {
             setStatus('Waiting for player… If this persists, check the network tab for the CDN script.', null)
