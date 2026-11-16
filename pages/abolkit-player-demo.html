@@ -108,6 +108,15 @@
         --abol-bg: #0a0e12;
         --abol-fg: #f4f7f5;
       }
+      abol-job-card {
+        display: block;
+        width: 100%;
+        --abol-max-width: 100%;
+        --abol-accent: var(--ak-accent);
+        --abol-bg: var(--ak-panel);
+        --abol-fg: var(--ak-ink);
+        --abol-radius: 0.5rem;
+      }
       .ak-howto {
         background: var(--ak-panel);
         border: 1px solid var(--ak-line);
@@ -139,7 +148,7 @@
       <p class="mb-2"><a href="../index.html">← Savanna static pages</a></p>
 
       <header class="ak-hero">
-        <span class="ak-kicker">AbolKit · @abolkit/player@0.1.1</span>
+        <span class="ak-kicker">AbolKit · @abolkit/player@1.0.0</span>
         <h1>Accessible learning for every learner</h1>
         <p class="lead">
           AbolKit embeds captions, sign language, audio description, and offline-friendly packs
@@ -254,6 +263,53 @@
         </div>
       </section>
 
+      <section class="ak-section" aria-labelledby="job-card-heading">
+        <h2 id="job-card-heading">Accessible job notices</h2>
+        <p class="intro">
+          <code>&lt;abol-job-card&gt;</code> renders a schema.org <code>JobPosting</code> (JSON, JSON-LD, or an HTML
+          career page) as an accessible notice with a plain-language summary and an Apply control that opens in a new
+          tab when a safe URL is present. This card uses inline JSON-LD — no extra request.
+        </p>
+        <abol-job-card lang="en" heading-level="3">
+          <script type="application/ld+json">
+            {
+              "@context": "https://schema.org",
+              "@type": "JobPosting",
+              "title": "Accessibility Engineer (Remote)",
+              "description": "<p>Savanna Learn is hiring an Accessibility Engineer to make learning tools work for every learner — captions, sign language, audio description, and keyboard-first interfaces. You will audit components against WCAG, build accessible HTML/CSS/JS, and partner with Deaf and low-vision users to validate real-world usability. Fully remote; Ethiopia-based applicants encouraged.</p><ul><li>Audit web components for WCAG 2.2 AA and screen-reader compatibility</li><li>Build caption, sign-language, and audio-description features</li><li>Test with keyboard, NVDA, VoiceOver, and reduced-motion preferences</li><li>Document accessible patterns for the wider team</li></ul>",
+              "url": "https://example.org/jobs/accessibility-engineer-2026/apply",
+              "datePosted": "2026-11-14",
+              "validThrough": "2026-12-31",
+              "employmentType": "FULL_TIME",
+              "hiringOrganization": {
+                "@type": "Organization",
+                "name": "Savanna Learn",
+                "sameAs": "https://example.org"
+              },
+              "jobLocation": {
+                "@type": "Place",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Addis Ababa",
+                  "addressCountry": "Ethiopia"
+                }
+              },
+              "jobLocationType": "TELECOMMUTE",
+              "baseSalary": {
+                "@type": "MonetaryAmount",
+                "currency": "USD",
+                "value": {
+                  "@type": "QuantitativeValue",
+                  "minValue": 2400,
+                  "maxValue": 3600,
+                  "unitText": "MONTH"
+                }
+              }
+            }
+          </script>
+        </abol-job-card>
+      </section>
+
       <section class="ak-section" aria-labelledby="offline-heading">
         <h2 id="offline-heading">Low-bandwidth &amp; offline</h2>
         <p class="intro">
@@ -308,7 +364,8 @@
       </section>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/@abolkit/player@0.1.1/dist/abol-player.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@abolkit/player@1.0.0/dist/abol-player.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@abolkit/job-card@1.0.0/dist/abol-job-card.js"></script>
     <script>
       ;(function () {
         var CAPTION_API = String(window.ABOLKIT_CAPTION_API || 'http://16.16.124.190').replace(/\/+$/, '')

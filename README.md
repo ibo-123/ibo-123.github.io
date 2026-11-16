@@ -13,7 +13,7 @@ server needed.
 | `pages/homepage-v1-paced.html` | Björn Sibanda — **WR 100: Fundamentals of Effective Communication**, cohort F26-SEM-16W (31 Aug – 20 Dec 2026), week 10 of 15 | Courses dropdown (3 courses), week strip with **every week preloaded**, "continue where you left off", immediate deliverables, period progress, overall score (59.56%, "slightly behind"), upcoming events |
 | `pages/homepage-v1-self-paced.html` | Amara Nwosu — **VA-1: VA Foundations & Professional Identity** | Course-progression gauge (16% against the 70% graduation threshold), 1 of 3 modules complete, **working module switcher**, **preloaded programme modal**, pacing boost (11 days left), upcoming events |
 | `pages/concept-with-navigation.html` | Amara Nwosu — concept *"The Future of the VA Industry"* | Curriculum navigation panel (read / current / unread states) beside a full authored concept: callouts, numbered card grid, two-column comparison, icon lists, "Mark as complete". The "Need a Fast Track?" block and the Padlet reflection block are removed on request. Includes an inline **AbolKit** `<abol-player>` lesson video. |
-| `pages/abolkit-player-demo.html` | AbolKit accessibility showcase | `@abolkit/player@0.1.1` CDN: keyboard-accessible player, EN/AM captions + caption style settings, sign window (`sign` / `sign-placeholder`), audio description (`descriptions`), offline-pack control, accessible HTML handout. |
+| `pages/abolkit-player-demo.html` | AbolKit accessibility showcase | `@abolkit/player@1.0.0` CDN: keyboard-accessible player, EN/AM captions + caption style settings, sign window (`sign` / `sign-placeholder`), audio description (`descriptions`), offline-pack control, accessible HTML handout. |
 
 
 ## Layout
@@ -60,10 +60,10 @@ Everything else is inert.
 
 Page: [`pages/abolkit-player-demo.html`](pages/abolkit-player-demo.html)
 
-Uses the published package via CDN (pin `@0.1.1`):
+Uses the published package via CDN (pin `@1.0.0`):
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@abolkit/player@0.1.1/dist/abol-player.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@abolkit/player@1.0.0/dist/abol-player.js"></script>
 ```
 
 Documented attributes used (from `@abolkit/player` config API / package demos):

@@ -770,6 +770,64 @@
               </div>
             </div>
           </div>
+
+          <div class="row g-3 mt-4">
+            <div class="col-12">
+              <div class="card homepage-card border-primary-subtle rounded-3">
+                <div class="card-header fw-medium fs-6">Career opportunity</div>
+                <div class="card-body">
+                  <abol-job-card
+                    lang="en"
+                    heading-level="3"
+                    style="
+                      --abol-accent: #db3e3e;
+                      --abol-bg: #fdf2f2;
+                      --abol-fg: #212529;
+                      --abol-radius: 0.5rem;
+                      --abol-max-width: 100%;
+                    "
+                  >
+                    <script type="application/ld+json">
+                      {
+                        "@context": "https://schema.org",
+                        "@type": "JobPosting",
+                        "title": "Virtual Assistant (Remote)",
+                        "description": "<p>We are looking for an organized, proactive Virtual Assistant to support a growing consultancy. You will manage calendars and inboxes, prepare documents, coordinate meetings, and handle light bookkeeping. Fully remote — a great fit for graduates of a VA foundations programme.</p><ul><li>Manage email, calendars, and travel arrangements</li><li>Draft and format documents, reports, and presentations</li><li>Coordinate meetings and take minutes</li><li>Support basic bookkeeping and invoicing</li></ul>",
+                        "url": "https://example.org/jobs/va-remote-2026/apply",
+                        "datePosted": "2026-11-14",
+                        "validThrough": "2026-12-31",
+                        "employmentType": "FULL_TIME",
+                        "hiringOrganization": {
+                          "@type": "Organization",
+                          "name": "Savanna Virtual Solutions",
+                          "sameAs": "https://example.org"
+                        },
+                        "jobLocation": {
+                          "@type": "Place",
+                          "address": {
+                            "@type": "PostalAddress",
+                            "addressLocality": "Addis Ababa",
+                            "addressCountry": "Ethiopia"
+                          }
+                        },
+                        "jobLocationType": "TELECOMMUTE",
+                        "baseSalary": {
+                          "@type": "MonetaryAmount",
+                          "currency": "USD",
+                          "value": {
+                            "@type": "QuantitativeValue",
+                            "minValue": 800,
+                            "maxValue": 1200,
+                            "unitText": "MONTH"
+                          }
+                        }
+                      }
+                    </script>
+                  </abol-job-card>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </article>
 
@@ -1408,5 +1466,6 @@ alert(example);
     <script src="../assets/js/popper.js"></script>
     <script src="../assets/js/bootstrap.bundle.js"></script>
     <script src="../assets/js/static-page.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@abolkit/job-card@1.0.0/dist/abol-job-card.js"></script>
   </body>
 </html>
