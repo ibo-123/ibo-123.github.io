@@ -42,8 +42,8 @@
     }
   ],
   "sign": {
-    "lang": "ets",
-    "src": "https://www.youtube.com/watch?v=2gF9GtK3dDA",
+    "lang": "asl",
+    "src": "https://abol-learning.vercel.app/sign/asl-alphabet.webm",
     "placeholder": true
   },
   "transcript": {
