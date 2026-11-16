@@ -35,10 +35,12 @@
       .feature-list li {
         margin-bottom: 0.35rem;
       }
-      #player-status.ok {
+      #player-status.ok,
+      #caption-status.ok {
         color: var(--bs-success, #198754);
       }
-      #player-status.err {
+      #player-status.err,
+      #caption-status.err {
         color: var(--bs-danger, #dc3545);
       }
       .controls-row {
@@ -59,16 +61,16 @@
       <p class="text-body-secondary mb-4">
         CDN quickstart from
         <a href="https://abolkit.vercel.app/getting-started/#player-cdn">abolkit.vercel.app/getting-started</a>
-        (pin <code>@0.1.1</code>), with captions from the Abol Kit caption API.
+        (pin <code>@0.1.1</code>). Caption mode depends on how you open this page (see below).
       </p>
 
       <section class="mb-4" aria-labelledby="about-heading">
         <h2 id="about-heading" class="h5">What AbolKit does</h2>
         <p class="mb-2">
           AbolKit provides an accessible, embeddable video player as a standard custom element.
-          With <code>caption-api</code> and <code>generate-captions</code>, the player requests a
-          transcript (and optional translations) for the video URL and attaches WebVTT tracks as
-          they become ready.
+          Live caption generation uses the Abol Kit HTTP API (<code>http://16.16.124.190/api</code>)
+          via <code>caption-api</code> + <code>generate-captions</code>. GitHub Pages stays on
+          pre-generated WebVTT files because the API is HTTP-only (browsers block mixed content).
         </p>
       </section>
 
@@ -77,32 +79,43 @@
         <ul class="feature-list">
           <li>Video playback from a YouTube source</li>
           <li>Play / pause, seeking, and volume via the built-in controls</li>
-          <li>Captions generated via <code>caption-api</code> (not static VTT files)</li>
-          <li>English transcript plus Amharic, Afaan Oromo, Tigrinya, and Afar when the API finishes</li>
-          <li>Responsive layout that fills the page content width on desktop and mobile</li>
+          <li>
+            Captions in English, Amharic, Afaan Oromo, Tigrinya, and Afar
+            (<code>generate-captions="am om ti aa"</code> locally; static VTT on Pages)
+          </li>
+          <li>Responsive layout for desktop and mobile</li>
+        </ul>
+      </section>
+
+      <section class="mb-4" aria-labelledby="caption-mode-heading">
+        <h2 id="caption-mode-heading" class="h5">Caption modes (Option 1)</h2>
+        <ul class="feature-list">
+          <li>
+            <strong>Local HTTP (live generation):</strong>
+            <code>python3 -m http.server 8000</code> then open
+            <code>http://localhost:8000/pages/abolkit-player-demo.html</code>.
+            The player calls <code>caption-api="http://16.16.124.190"</code> (API routes under
+            <code>/api</code>).
+          </li>
+          <li>
+            <strong>GitHub Pages (HTTPS):</strong> uses pre-generated VTT under
+            <code>assets/media/hisys-story-*.vtt</code>. Live generation is not attempted (no mixed-content bypass).
+          </li>
         </ul>
       </section>
 
       <section aria-labelledby="player-heading">
         <h2 id="player-heading" class="h5">Player</h2>
         <div class="player-shell">
-          <!--
-            Documented player caption flow (ADR 0007 / player caption-api client):
-            caption-api + generate-captions ("" = transcript only; "am" = + Amharic).
-            Do not set captions= / <track> for the same languages — host tracks win and block API tracks.
-          -->
+          <!-- Attributes / tracks are set below before the CDN script loads. -->
           <abol-player
             id="demo-player"
             lang="en"
             src="https://www.youtube.com/watch?v=HisYsqqszq0"
-            caption-api="http://16.16.124.190"
-            generate-captions="am om ti aa"
           ></abol-player>
         </div>
         <p id="player-status" class="mb-2" role="status">Loading player…</p>
-        <p id="caption-status" class="mb-2 text-body-secondary" role="status">
-          Waiting for caption API…
-        </p>
+        <p id="caption-status" class="mb-2 text-body-secondary" role="status">Configuring captions…</p>
         <div class="controls-row" aria-label="Programmatic player controls">
           <button type="button" class="btn btn-sm btn-primary" id="btn-play">Play</button>
           <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-pause">Pause</button>
@@ -112,18 +125,51 @@
           Package:
           <a href="https://www.npmjs.com/package/@abolkit/player">@abolkit/player@0.1.1</a>
           · API:
-          <a href="http://16.16.124.190/docs">http://16.16.124.190/docs</a>
+          <a href="http://16.16.124.190/docs">http://16.16.124.190/api</a>
           · Docs:
           <a href="https://abolkit.vercel.app/getting-started/#player-cdn">Getting started (CDN)</a>
-        </p>
-        <p class="small text-body-secondary mt-2 mb-0">
-          Note: GitHub Pages is HTTPS while this API is HTTP-only. Browsers block that as mixed
-          content on the live site — serve this folder over <code>http://localhost</code> to exercise
-          caption generation, or point <code>caption-api</code> at an HTTPS API origin.
         </p>
       </section>
     </main>
 
+    <script>
+      // Configure caption mode before the player bundle upgrades the element.
+      ;(function () {
+        var player = document.getElementById('demo-player')
+        var captionEl = document.getElementById('caption-status')
+        var host = location.hostname
+        var localHttp =
+          location.protocol === 'http:' && (host === 'localhost' || host === '127.0.0.1')
+
+        if (localHttp) {
+          // Live generation against the Abol Kit API (routes are under /api on this origin).
+          player.setAttribute('caption-api', 'http://16.16.124.190')
+          player.setAttribute('generate-captions', 'am om ti aa')
+          captionEl.textContent =
+            'Local HTTP mode: live caption generation via http://16.16.124.190/api …'
+        } else {
+          // GitHub Pages / HTTPS: pre-generated VTT only (no caption-api — avoids mixed content).
+          player.setAttribute('captions', '../assets/media/hisys-story-en.vtt')
+          player.setAttribute('captions-lang', 'en')
+          player.setAttribute('captions-label', 'English')
+          ;[
+            ['am', 'Amharic'],
+            ['om', 'Afaan Oromo'],
+            ['ti', 'Tigrinya'],
+            ['aa', 'Afar'],
+          ].forEach(function (pair) {
+            var track = document.createElement('track')
+            track.kind = 'captions'
+            track.srclang = pair[0]
+            track.label = pair[1]
+            track.src = '../assets/media/hisys-story-' + pair[0] + '.vtt'
+            player.appendChild(track)
+          })
+          captionEl.textContent =
+            'Pages/HTTPS mode: pre-generated VTT (en/am/om/ti/aa). Live API generation needs local HTTP until an HTTPS API exists.'
+        }
+      })()
+    </script>
     <!-- Official Player (CDN) quickstart: https://abolkit.vercel.app/getting-started/#player-cdn -->
     <script src="https://cdn.jsdelivr.net/npm/@abolkit/player@0.1.1/dist/abol-player.js"></script>
     <script>
@@ -132,6 +178,9 @@
         var captionEl = document.getElementById('caption-status')
         var player = document.getElementById('demo-player')
         var ready = false
+        var localHttp =
+          location.protocol === 'http:' &&
+          (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
 
         function setStatus(text, kind) {
           statusEl.textContent = text
@@ -152,17 +201,16 @@
           return
         }
 
-        if (location.protocol === 'https:') {
-          setCaptionStatus(
-            'This page is HTTPS; caption-api is HTTP — the browser will block the request (mixed content). Open via http://localhost to generate captions.',
-            'err'
-          )
-        }
-
         player.addEventListener('abol:ready', function (ev) {
           ready = true
           var engine = ev.detail && ev.detail.engine ? ev.detail.engine : 'unknown'
           setStatus('Player ready (' + engine + '). Use the controls or the buttons below.', 'ok')
+          if (!localHttp) {
+            setCaptionStatus(
+              'Using pre-generated VTT (en, am, om, ti, aa). Open via http://localhost:8000 for live API generation.',
+              'ok'
+            )
+          }
         })
 
         player.addEventListener('abol:error', function (ev) {
@@ -182,7 +230,9 @@
           } else if (d.status === 'ready') {
             var langs = Array.isArray(d.languages) ? d.languages.join(', ') : ''
             setCaptionStatus(
-              langs ? 'Captions ready (' + langs + '). Use the CC menu to switch languages.' : 'Caption API: ready.',
+              langs
+                ? 'Captions ready (' + langs + '). Use the CC menu to switch languages.'
+                : 'Caption API: ready.',
               'ok'
             )
           } else if (d.status === 'failed' || d.status === 'error') {
