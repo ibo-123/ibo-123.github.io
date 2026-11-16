@@ -568,9 +568,8 @@
                   <section class="abol-kit-lesson" aria-labelledby="abol-kit-lesson-heading" style="margin: 1.25rem 0 1.5rem">
                     <h4 id="abol-kit-lesson-heading">Lesson video</h4>
                     <p>
-                      Short demonstration of the published AbolKit
-                      <code>&lt;abol-player&gt;</code> web component: play, pause, seek, volume, and
-                      captions (English / Amharic). See the
+                      AbolKit <code>&lt;abol-player&gt;</code> with captions from the caption API
+                      (<code>caption-api</code> + <code>generate-captions</code>). See the
                       <a href="abolkit-player-demo.html">full AbolKit demo page</a> for details.
                     </p>
                     <div style="background: #0a0e12; border-radius: 0.5rem; overflow: hidden; max-width: 40rem">
@@ -578,18 +577,10 @@
                         id="concept-abol-player"
                         lang="en"
                         src="https://www.youtube.com/watch?v=DRiV4KZBoIY"
-                        captions="../assets/media/abol-demo-en.vtt"
-                        captions-lang="en"
-                        captions-label="English"
+                        caption-api="http://16.16.124.190"
+                        generate-captions="am"
                         style="display: block; width: 100%; --abol-max-width: 100%"
-                      >
-                        <track
-                          kind="captions"
-                          srclang="am"
-                          label="Amharic"
-                          src="../assets/media/abol-demo-am.vtt"
-                        />
-                      </abol-player>
+                      ></abol-player>
                     </div>
                     <p id="concept-abol-status" class="text-body-secondary" role="status" style="margin-top: 0.5rem">
                       Loading player…
@@ -1331,11 +1322,23 @@ alert(example);
           return
         }
         player.addEventListener('abol:ready', function () {
-          statusEl.textContent = 'Player ready — use the built-in controls for playback and captions.'
+          statusEl.textContent = 'Player ready — captions load from the caption API when available.'
         })
         player.addEventListener('abol:error', function (ev) {
           statusEl.textContent =
             'Player error: ' + ((ev.detail && ev.detail.message) || 'unknown')
+        })
+        player.addEventListener('abol:captions', function (ev) {
+          var d = ev.detail || {}
+          if (d.status === 'processing') {
+            statusEl.textContent = 'Caption API: generating…'
+          } else if (d.status === 'caption') {
+            statusEl.textContent = 'Caption ready: ' + (d.lang || '')
+          } else if (d.status === 'ready') {
+            statusEl.textContent = 'Captions ready — use the CC menu to switch languages.'
+          } else if (d.status === 'error' || d.status === 'failed') {
+            statusEl.textContent = 'Caption API: ' + (d.message || 'failed')
+          }
         })
       })()
     </script>

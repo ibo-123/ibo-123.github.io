@@ -59,15 +59,16 @@
       <p class="text-body-secondary mb-4">
         CDN quickstart from
         <a href="https://abolkit.vercel.app/getting-started/#player-cdn">abolkit.vercel.app/getting-started</a>
-        (pin <code>@0.1.1</code>), embedded in the Savanna static pages starter.
+        (pin <code>@0.1.1</code>), with captions from the Abol Kit caption API.
       </p>
 
       <section class="mb-4" aria-labelledby="about-heading">
         <h2 id="about-heading" class="h5">What AbolKit does</h2>
         <p class="mb-2">
           AbolKit provides an accessible, embeddable video player as a standard custom element.
-          Load the pinned CDN script, set a media <code>src</code>, and optionally attach caption
-          tracks. Playback, seeking, volume, and caption UI ship with the component.
+          With <code>caption-api</code> and <code>generate-captions</code>, the player requests a
+          transcript (and optional translations) for the video URL and attaches WebVTT tracks as
+          they become ready.
         </p>
       </section>
 
@@ -76,8 +77,8 @@
         <ul class="feature-list">
           <li>Video playback from a YouTube source</li>
           <li>Play / pause, seeking, and volume via the built-in controls</li>
-          <li>Caption display from WebVTT files hosted with this site</li>
-          <li>Caption language selection (English and Amharic tracks)</li>
+          <li>Captions generated via <code>caption-api</code> (not static VTT files)</li>
+          <li>English transcript plus Amharic translation when the API finishes</li>
           <li>Responsive layout that fills the page content width on desktop and mobile</li>
         </ul>
       </section>
@@ -85,23 +86,23 @@
       <section aria-labelledby="player-heading">
         <h2 id="player-heading" class="h5">Player</h2>
         <div class="player-shell">
+          <!--
+            Documented player caption flow (ADR 0007 / player caption-api client):
+            caption-api + generate-captions ("" = transcript only; "am" = + Amharic).
+            Do not set captions= / <track> for the same languages — host tracks win and block API tracks.
+          -->
           <abol-player
             id="demo-player"
             lang="en"
             src="https://www.youtube.com/watch?v=DRiV4KZBoIY"
-            captions="../assets/media/abol-demo-en.vtt"
-            captions-lang="en"
-            captions-label="English"
-          >
-            <track
-              kind="captions"
-              srclang="am"
-              label="Amharic"
-              src="../assets/media/abol-demo-am.vtt"
-            />
-          </abol-player>
+            caption-api="http://16.16.124.190"
+            generate-captions="am"
+          ></abol-player>
         </div>
         <p id="player-status" class="mb-2" role="status">Loading player…</p>
+        <p id="caption-status" class="mb-2 text-body-secondary" role="status">
+          Waiting for caption API…
+        </p>
         <div class="controls-row" aria-label="Programmatic player controls">
           <button type="button" class="btn btn-sm btn-primary" id="btn-play">Play</button>
           <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-pause">Pause</button>
@@ -110,8 +111,15 @@
         <p class="small text-body-secondary mb-0">
           Package:
           <a href="https://www.npmjs.com/package/@abolkit/player">@abolkit/player@0.1.1</a>
+          · API:
+          <a href="http://16.16.124.190/docs">http://16.16.124.190/docs</a>
           · Docs:
           <a href="https://abolkit.vercel.app/getting-started/#player-cdn">Getting started (CDN)</a>
+        </p>
+        <p class="small text-body-secondary mt-2 mb-0">
+          Note: GitHub Pages is HTTPS while this API is HTTP-only. Browsers block that as mixed
+          content on the live site — serve this folder over <code>http://localhost</code> to exercise
+          caption generation, or point <code>caption-api</code> at an HTTPS API origin.
         </p>
       </section>
     </main>
@@ -121,6 +129,7 @@
     <script>
       ;(function () {
         var statusEl = document.getElementById('player-status')
+        var captionEl = document.getElementById('caption-status')
         var player = document.getElementById('demo-player')
         var ready = false
 
@@ -130,9 +139,24 @@
           if (kind) statusEl.classList.add(kind)
         }
 
+        function setCaptionStatus(text, kind) {
+          captionEl.textContent = text
+          captionEl.classList.remove('ok', 'err', 'text-body-secondary')
+          if (kind === 'ok') captionEl.classList.add('ok')
+          else if (kind === 'err') captionEl.classList.add('err')
+          else captionEl.classList.add('text-body-secondary')
+        }
+
         if (!window.customElements || !customElements.get('abol-player')) {
           setStatus('AbolKit script did not register <abol-player>. Check the CDN load.', 'err')
           return
+        }
+
+        if (location.protocol === 'https:') {
+          setCaptionStatus(
+            'This page is HTTPS; caption-api is HTTP — the browser will block the request (mixed content). Open via http://localhost to generate captions.',
+            'err'
+          )
         }
 
         player.addEventListener('abol:ready', function (ev) {
@@ -144,6 +168,26 @@
         player.addEventListener('abol:error', function (ev) {
           var msg = (ev.detail && ev.detail.message) || 'Unknown player error'
           setStatus('Player error: ' + msg, 'err')
+        })
+
+        player.addEventListener('abol:captions', function (ev) {
+          var d = ev.detail || {}
+          if (d.status === 'processing') {
+            setCaptionStatus('Caption API: generating transcript / translations…', null)
+          } else if (d.status === 'caption') {
+            setCaptionStatus(
+              'Caption ready: ' + (d.lang || '?') + ' (' + (d.kind || 'track') + ')',
+              'ok'
+            )
+          } else if (d.status === 'ready') {
+            var langs = Array.isArray(d.languages) ? d.languages.join(', ') : ''
+            setCaptionStatus(
+              langs ? 'Captions ready (' + langs + '). Use the CC menu to switch languages.' : 'Caption API: ready.',
+              'ok'
+            )
+          } else if (d.status === 'failed' || d.status === 'error') {
+            setCaptionStatus('Caption API error: ' + (d.message || 'failed'), 'err')
+          }
         })
 
         document.getElementById('btn-play').addEventListener('click', function () {
@@ -160,12 +204,6 @@
           if (!ready) return
           player.seek(3)
         })
-
-        setTimeout(function () {
-          if (!ready && !statusEl.classList.contains('err')) {
-            setStatus('Waiting for player… If this persists, check the network tab for the CDN script.', null)
-          }
-        }, 8000)
       })()
     </script>
   </body>
