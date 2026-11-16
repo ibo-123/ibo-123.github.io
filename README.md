@@ -13,7 +13,7 @@ server needed.
 | `pages/homepage-v1-paced.html` | Björn Sibanda — **WR 100: Fundamentals of Effective Communication**, cohort F26-SEM-16W (31 Aug – 20 Dec 2026), week 10 of 15 | Courses dropdown (3 courses), week strip with **every week preloaded**, "continue where you left off", immediate deliverables, period progress, overall score (59.56%, "slightly behind"), upcoming events |
 | `pages/homepage-v1-self-paced.html` | Amara Nwosu — **VA-1: VA Foundations & Professional Identity** | Course-progression gauge (16% against the 70% graduation threshold), 1 of 3 modules complete, **working module switcher**, **preloaded programme modal**, pacing boost (11 days left), upcoming events |
 | `pages/concept-with-navigation.html` | Amara Nwosu — concept *"The Future of the VA Industry"* | Curriculum navigation panel (read / current / unread states) beside a full authored concept: callouts, numbered card grid, two-column comparison, icon lists, "Mark as complete". The "Need a Fast Track?" block and the Padlet reflection block are removed on request. Includes an inline **AbolKit** `<abol-player>` lesson video. |
-| `pages/abolkit-player-demo.html` | AbolKit integration demo | `@abolkit/player@0.1.1` via jsDelivr. Local HTTP: API caption generation. GitHub Pages HTTPS: pre-generated `hisys-story-*.vtt` (mixed content blocks HTTP API). |
+| `pages/abolkit-player-demo.html` | AbolKit accessibility showcase | `@abolkit/player@0.1.1` CDN: keyboard-accessible player, EN/AM captions + caption style settings, sign window (`sign` / `sign-placeholder`), audio description (`descriptions`), offline-pack control, accessible HTML handout. |
 
 
 ## Layout
@@ -56,35 +56,45 @@ the accessibility tree and no id appears twice):
 
 Everything else is inert.
 
-## AbolKit player & captions
+## AbolKit accessibility showcase
 
-Integration follows the [Player (CDN) quickstart](https://abolkit.vercel.app/getting-started/#player-cdn).
+Page: [`pages/abolkit-player-demo.html`](pages/abolkit-player-demo.html)
 
-### Local HTTP — API generation
+Uses the published package via CDN (pin `@0.1.1`):
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@abolkit/player@0.1.1/dist/abol-player.js"></script>
+```
+
+Documented attributes used (from `@abolkit/player` config API / package demos):
+
+| Attribute | Purpose |
+|-----------|---------|
+| `src` / `audio` | Lesson media |
+| `captions`, `captions-lang`, `<track>` | English + Amharic captions |
+| `descriptions` | Audio description VTT |
+| `sign`, `sign-placeholder` | Sign-language window (move/resize in UI) |
+| `transcript` | Synchronized transcript HTML |
+| `offline-pack` | Lightweight offline pack download link |
+| `caption-api`, `generate-captions` | Optional live caption API (local HTTP only) |
+
+Sample assets: `assets/media/abolkit-showcase/`.
+
+### Local test
 
 ```bash
-cd Savanna-static-pages   # not abol-player-test
+cd Savanna-static-pages
 python3 -m http.server 8000
 # open http://localhost:8000/pages/abolkit-player-demo.html
 ```
 
+Optional API origin override (local HTTP):
+
 ```html
-<abol-player
-  lang="en"
-  src="https://www.youtube.com/watch?v=HisYsqqszq0"
-  caption-api="http://16.16.124.190"
-  generate-captions="am om ti aa"
-></abol-player>
+<script>window.ABOLKIT_CAPTION_API = 'http://16.16.124.190'</script>
 ```
 
-`caption-api` is the API **origin**; the player calls `/api/captions*`. Do not also set manual `captions=` / `<track>` for the same languages (host tracks block API tracks).
+### GitHub Pages
 
-### GitHub Pages — pre-generated VTT
-
-Pages is HTTPS; the caption API is HTTP-only. Browsers block that as **mixed content** (no bypass). On HTTPS the demo uses `assets/media/hisys-story-{en,am,om,ti,aa}.vtt` instead of `caption-api`.
-
-**Live caption generation requires local HTTP until an HTTPS API endpoint is available.**
-
-Expected harmless console noise on Pages: CDN service-worker registration failing (cross-origin jsDelivr) — playback still works.
-
+Relative paths; no SSR. Live HTTP caption API is not called from HTTPS Pages (mixed content). Showcase features use package sample VTT/sign/AD/offline assets that load over HTTPS.
 

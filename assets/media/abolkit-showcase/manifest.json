@@ -1,0 +1,24 @@
+{
+  "id": "savanna-abolkit-showcase",
+  "title": "AbolKit accessibility showcase lesson",
+  "lang": "en",
+  "media": {
+    "video": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm",
+    "audio": "https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3",
+    "poster": "https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice.jpg"
+  },
+  "captions": [
+    { "lang": "en", "label": "English", "src": "./captions-en.vtt", "default": true },
+    { "lang": "am", "label": "Amharic", "src": "./captions-am.vtt" }
+  ],
+  "descriptions": [
+    { "lang": "en", "src": "./ad-en.vtt" }
+  ],
+  "sign": {
+    "lang": "ets",
+    "src": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+    "placeholder": true
+  },
+  "transcript": { "src": "./transcript.html" },
+  "offlinePack": "./offline-pack-note.txt"
+}

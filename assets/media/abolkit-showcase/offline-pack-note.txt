@@ -1,0 +1,3 @@
+Placeholder for the static offline pack zip (#35).
+In production this is assets/{id}/packs/offline.zip from the offline-pack worker job.
+Use the player's Download control (#36) for Cache API + IndexedDB offline, or fetch this pack for file:// / phone file managers.

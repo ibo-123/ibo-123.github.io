@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Accessible lesson handout — AbolKit showcase</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: "Noto Sans", "Noto Sans Ethiopic", system-ui, sans-serif;
+        line-height: 1.55;
+        color: #122;
+        background: #f7f8f6;
+        padding: 1.5rem;
+      }
+      main {
+        max-width: 40rem;
+        margin: 0 auto;
+        background: #fff;
+        padding: 1.5rem 1.75rem 2rem;
+        border: 1px solid #d8ddd6;
+      }
+      h1 { font-size: 1.5rem; margin-top: 0; }
+      h2 { font-size: 1.15rem; margin-top: 1.5rem; }
+      img { max-width: 100%; height: auto; display: block; }
+      figure { margin: 1rem 0; }
+      figcaption { font-size: 0.9rem; color: #445; margin-top: 0.4rem; }
+      .am { font-size: 1.05rem; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <p><a href="../../pages/abolkit-player-demo.html">← Back to AbolKit showcase</a></p>
+        <h1>Accessible lesson handout</h1>
+        <p>
+          Sample HTML document for the AbolKit accessibility showcase. Structure, headings,
+          and alternative text are chosen so screen readers can navigate the content.
+        </p>
+      </header>
+
+      <figure>
+        <img
+          src="https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice.jpg"
+          width="480"
+          height="320"
+          alt="Close-up of a pink grapefruit slice on a white surface, showing juicy segments and pale pith."
+        />
+        <figcaption>
+          Example image with a meaningful description (alternative text) for screen-reader users.
+        </figcaption>
+      </figure>
+
+      <h2>English summary</h2>
+      <p>
+        This short lesson pairs a brief video clip with captions, audio description, and an
+        optional sign-language window in the AbolKit player. Learners can adjust caption size
+        and colors in the player settings.
+      </p>
+
+      <h2 lang="am" class="am">አማርኛ ማጠቃለያ</h2>
+      <p lang="am" class="am">
+        ይህ አጭር ትምህርት ከቪዲዮ ጋር መግለጫ ጽሑፎችን፣ የድምጽ መግለጫን እና የምልክት ቋንቋ መስኮትን ያጣምራል።
+        ተማሪዎች በማጫወቻ ቅንብሮች ውስጥ የመግለጫ መጠንና ቀለም ማስተካከል ይችላሉ።
+      </p>
+
+      <h2>Tagged PDF</h2>
+      <p>
+        A production offline pack can include a tagged PDF. This static demo ships the accessible
+        HTML version above; a tagged PDF sample is not bundled here yet.
+      </p>
+    </main>
+  </body>
+</html>

@@ -3,173 +3,303 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AbolKit player demo | Savanna static pages</title>
+    <title>AbolKit accessibility showcase | Savanna static pages</title>
     <link rel="stylesheet" href="../assets/css/application_alx.css" media="all" />
     <link rel="stylesheet" href="../assets/css/app.css" media="all" />
     <link rel="stylesheet" href="../assets/css/static-page.css" media="all" />
     <style>
-      body {
-        padding: 2rem 1rem 3rem;
+      :root {
+        --ak-ink: #14201a;
+        --ak-muted: #4a5a52;
+        --ak-line: #d5ddd7;
+        --ak-panel: #f4f7f5;
+        --ak-accent: #0b6e4f;
+        --ak-player-bg: #0a0e12;
       }
-      .demo-wrap {
-        max-width: 52rem;
+      body.ak-showcase {
+        color: var(--ak-ink);
+        background:
+          radial-gradient(circle at 12% 0%, #e7f2ec 0%, transparent 42%),
+          linear-gradient(180deg, #fbfcfb 0%, #eef2ef 100%);
+      }
+      .ak-wrap { max-width: 58rem; margin: 0 auto; padding: 1.5rem 1rem 3.5rem; }
+      .ak-hero {
+        padding: 1.75rem 0 1.25rem;
+        border-bottom: 1px solid var(--ak-line);
+        margin-bottom: 1.75rem;
+      }
+      .ak-hero h1 {
+        font-size: clamp(1.75rem, 4vw, 2.4rem);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin: 0.35rem 0 0.75rem;
+      }
+      .ak-hero .lead {
+        font-size: 1.05rem;
+        color: var(--ak-muted);
+        max-width: 42rem;
+        margin: 0;
+      }
+      .ak-kicker {
+        display: inline-block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--ak-accent);
+      }
+      .ak-grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: 1fr;
+        margin: 0 0 2rem;
+      }
+      @media (min-width: 720px) {
+        .ak-grid { grid-template-columns: 1fr 1fr; }
+        .ak-grid .ak-card.span-2 { grid-column: 1 / -1; }
+      }
+      .ak-card {
+        background: #fff;
+        border: 1px solid var(--ak-line);
+        border-radius: 0.5rem;
+        padding: 1rem 1.1rem 1.15rem;
+      }
+      .ak-card h3 {
+        font-size: 1.05rem;
+        margin: 0 0 0.4rem;
+        display: flex;
+        gap: 0.5rem;
+        align-items: baseline;
+      }
+      .ak-card p { margin: 0; color: var(--ak-muted); font-size: 0.95rem; }
+      .ak-status {
+        display: inline-block;
+        margin-top: 0.65rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        padding: 0.2rem 0.45rem;
+        border-radius: 0.25rem;
+      }
+      .ak-status.live { background: #e4f6ec; color: #0b6e4f; }
+      .ak-status.partial { background: #fff4db; color: #8a5a00; }
+      .ak-status.planned { background: #eef0f2; color: #4a5560; }
+      .ak-section { margin: 2rem 0; }
+      .ak-section h2 {
+        font-size: 1.35rem;
+        margin: 0 0 0.5rem;
+      }
+      .ak-section > .intro {
+        color: var(--ak-muted);
+        max-width: 46rem;
+        margin: 0 0 1rem;
       }
       .player-shell {
-        background: #0a0e12;
+        background: var(--ak-player-bg);
         border-radius: 0.5rem;
         overflow: hidden;
-        margin: 1rem 0 0.75rem;
       }
       abol-player {
         display: block;
         width: 100%;
         --abol-max-width: 100%;
-        --abol-accent: #0d6efd;
+        --abol-accent: #3d9a78;
         --abol-bg: #0a0e12;
         --abol-fg: #f4f7f5;
       }
-      .feature-list {
-        margin: 0;
-        padding-left: 1.25rem;
+      .ak-howto {
+        background: var(--ak-panel);
+        border: 1px solid var(--ak-line);
+        border-radius: 0.5rem;
+        padding: 0.9rem 1rem;
+        margin-top: 0.9rem;
       }
-      .feature-list li {
-        margin-bottom: 0.35rem;
+      .ak-howto h3 { font-size: 0.95rem; margin: 0 0 0.4rem; }
+      .ak-howto ol { margin: 0; padding-left: 1.2rem; color: var(--ak-muted); }
+      .ak-howto li { margin-bottom: 0.25rem; }
+      .ak-doc-list { list-style: none; padding: 0; margin: 0.75rem 0 0; }
+      .ak-doc-list li {
+        border: 1px solid var(--ak-line);
+        border-radius: 0.4rem;
+        padding: 0.75rem 0.9rem;
+        margin-bottom: 0.5rem;
+        background: #fff;
       }
-      #player-status.ok,
-      #caption-status.ok {
-        color: var(--bs-success, #198754);
-      }
-      #player-status.err,
-      #caption-status.err {
-        color: var(--bs-danger, #dc3545);
-      }
-      .controls-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        margin: 0.75rem 0 1.25rem;
-      }
+      .ak-doc-list a { font-weight: 600; }
+      .ak-meta { font-size: 0.85rem; color: var(--ak-muted); margin-top: 0.35rem; }
+      #player-status.ok, #caption-status.ok { color: var(--ak-accent); }
+      #player-status.err, #caption-status.err { color: #b42318; }
+      .controls-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.75rem 0; }
+      code { font-size: 0.88em; }
     </style>
   </head>
-  <body class="bg-body-tertiary">
-    <main class="container-lg demo-wrap">
-      <p class="mb-2">
-        <a href="../index.html">← Savanna static pages</a>
-      </p>
+  <body class="bg-body-tertiary ak-showcase">
+    <main class="ak-wrap">
+      <p class="mb-2"><a href="../index.html">← Savanna static pages</a></p>
 
-      <h1 class="mb-1">AbolKit player</h1>
-      <p class="text-body-secondary mb-4">
-        CDN quickstart from
-        <a href="https://abolkit.vercel.app/getting-started/#player-cdn">abolkit.vercel.app/getting-started</a>
-        (<code>@abolkit/player@0.1.1</code>). On local HTTP the player
-        <strong>generates captions from the API</strong>; on GitHub Pages it uses pre-generated VTT
-        (HTTPS pages cannot call the HTTP API — mixed content, no bypass).
-      </p>
-
-      <section class="mb-4" aria-labelledby="about-heading">
-        <h2 id="about-heading" class="h5">What AbolKit does</h2>
-        <p class="mb-2">
-          With <code>caption-api</code> + <code>generate-captions</code>, the component calls
-          <code>http://16.16.124.190/api</code>, polls jobs, and attaches WebVTT tracks
-          (English transcript + Amharic, Afaan Oromo, Tigrinya, Afar).
+      <header class="ak-hero">
+        <span class="ak-kicker">AbolKit · @abolkit/player@0.1.1</span>
+        <h1>Accessible learning for every learner</h1>
+        <p class="lead">
+          AbolKit embeds captions, sign language, audio description, and offline-friendly packs
+          into ordinary static pages — without building a custom player or backend. This Savanna
+          page showcases the published web component and stays honest about what works today.
         </p>
+      </header>
+
+      <section class="ak-section" aria-labelledby="capabilities-heading">
+        <h2 id="capabilities-heading">Six accessibility capabilities</h2>
+        <p class="intro">
+          Status badges reflect what this static demo can exercise with the published package API.
+        </p>
+        <div class="ak-grid">
+          <article class="ak-card">
+            <h3><span aria-hidden="true">⌨️</span> Accessible video player</h3>
+            <p>Keyboard-focusable controls, screen-reader labels, play/pause/seek/volume, and caption menus from <code>&lt;abol-player&gt;</code>.</p>
+            <span class="ak-status live">Demonstrated</span>
+          </article>
+          <article class="ak-card">
+            <h3><span aria-hidden="true">Cc</span> English &amp; Amharic captions</h3>
+            <p>Switch languages in the CC menu. Caption size, color, background, and position live under the player Settings panel (<code>captionStyle</code>).</p>
+            <span class="ak-status live">Demonstrated</span>
+          </article>
+          <article class="ak-card">
+            <h3><span aria-hidden="true">🤟</span> Ethiopian Sign Language window</h3>
+            <p>Documented <code>sign</code> attribute with <code>sign-placeholder</code>. Move and resize via the sign window controls (sample/placeholder video in this demo).</p>
+            <span class="ak-status partial">UI demonstrated · sample video</span>
+          </article>
+          <article class="ak-card">
+            <h3><span aria-hidden="true">🔊</span> Audio description</h3>
+            <p>Documented <code>descriptions</code> track. Toggle AD mode in Settings (text / voice / off when available).</p>
+            <span class="ak-status live">Demonstrated</span>
+          </article>
+          <article class="ak-card">
+            <h3><span aria-hidden="true">📴</span> Offline learning pack (3G)</h3>
+            <p>Documented <code>offline-pack</code> download link plus player offline download control (Cache API). Best tested over local HTTP / secure context.</p>
+            <span class="ak-status partial">Controls demonstrated</span>
+          </article>
+          <article class="ak-card">
+            <h3><span aria-hidden="true">📄</span> Accessible documents</h3>
+            <p>Accessible HTML handout with headings and image alternative text. Tagged PDF is not bundled in this static demo.</p>
+            <span class="ak-status partial">HTML live · PDF planned</span>
+          </article>
+        </div>
       </section>
 
-      <section class="mb-4" aria-labelledby="modes-heading">
-        <h2 id="modes-heading" class="h5">Caption modes</h2>
-        <ul class="feature-list">
+      <section class="ak-section" aria-labelledby="player-heading">
+        <h2 id="player-heading">Player showcase</h2>
+        <p class="intro">
+          Wired from the published package (CDN). Attributes match the player config API:
+          captions, descriptions, sign, transcript, and offline-pack. Short CC0 sample video.
+        </p>
+        <div class="player-shell">
+          <abol-player
+            id="showcase-player"
+            lang="en"
+            src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm"
+            audio="https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3"
+            captions="../assets/media/abolkit-showcase/captions-en.vtt"
+            captions-lang="en"
+            captions-label="English"
+            descriptions="../assets/media/abolkit-showcase/ad-en.vtt"
+            sign="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+            sign-placeholder
+            transcript="../assets/media/abolkit-showcase/transcript.html"
+            offline-pack="../assets/media/abolkit-showcase/offline-pack-note.txt"
+          >
+            <track
+              kind="captions"
+              srclang="am"
+              label="Amharic"
+              src="../assets/media/abolkit-showcase/captions-am.vtt"
+            />
+          </abol-player>
+        </div>
+        <p id="player-status" class="mb-1 mt-2" role="status">Loading player…</p>
+        <p id="caption-status" class="text-body-secondary mb-2" role="status"></p>
+        <div class="controls-row" aria-label="Programmatic controls">
+          <button type="button" class="btn btn-sm btn-primary" id="btn-play">Play</button>
+          <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-pause">Pause</button>
+          <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-seek">Seek 2s</button>
+        </div>
+        <div class="ak-howto">
+          <h3>Try these controls</h3>
+          <ol>
+            <li>Tab through controls; use Space/Enter to activate (keyboard access).</li>
+            <li>Open CC → choose English or Amharic.</li>
+            <li>Open Settings → Caption style (size, colors, position, edge).</li>
+            <li>Toggle Sign language; drag the sign bar / grip to move or resize.</li>
+            <li>Settings → Audio description (when a descriptions track is loaded).</li>
+            <li>Use Download / offline-pack controls for the lightweight pack note.</li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="ak-section" aria-labelledby="offline-heading">
+        <h2 id="offline-heading">Low-bandwidth &amp; offline</h2>
+        <p class="intro">
+          The player can expose a static offline pack URL (<code>offline-pack</code>) and a download
+          control for Cache API offline playback. Packs are meant to stay small (audio, text, light HTML)
+          for 3G and entry-level phones. This demo links a placeholder pack note from the package samples.
+        </p>
+        <div class="ak-card span-2">
+          <p>
+            Offline pack file:
+            <a href="../assets/media/abolkit-showcase/offline-pack-note.txt" download>offline-pack-note.txt</a>
+          </p>
+          <p class="ak-meta">
+            Full zip packs are produced by the Abol Kit offline-pack worker in production; not invented here.
+          </p>
+        </div>
+      </section>
+
+      <section class="ak-section" aria-labelledby="docs-heading">
+        <h2 id="docs-heading">Accessible documents</h2>
+        <p class="intro">
+          Documents sit beside the player as ordinary static assets — no new backend.
+        </p>
+        <ul class="ak-doc-list">
           <li>
-            <strong>Local HTTP (API generation):</strong>
-            <code>python3 -m http.server 8000</code> →
-            <code>http://localhost:8000/pages/abolkit-player-demo.html</code>
-            uses <code>caption-api</code> + <code>generate-captions="am om ti aa"</code>
-            (no manual <code>.vtt</code>).
+            <a href="../assets/media/abolkit-showcase/lesson-handout.html">Accessible HTML handout</a>
+            <p class="ak-meta">Headings, bilingual summary, image with meaningful alternative text. Screen-reader friendly.</p>
+            <span class="ak-status live">Available</span>
           </li>
           <li>
-            <strong>GitHub Pages (HTTPS):</strong> pre-generated
-            <code>assets/media/hisys-story-*.vtt</code> only. Live API calls are not attempted.
+            <span class="fw-semibold">Tagged PDF</span>
+            <p class="ak-meta">Not bundled in this static showcase. Ready to link when a tagged PDF asset is provided.</p>
+            <span class="ak-status planned">Planned</span>
           </li>
         </ul>
       </section>
 
-      <section aria-labelledby="player-heading">
-        <h2 id="player-heading" class="h5">Player</h2>
-        <div class="player-shell">
-          <!-- Configured below before the CDN script (API vs static VTT by protocol). -->
-          <abol-player
-            id="demo-player"
-            lang="en"
-            src="https://www.youtube.com/watch?v=HisYsqqszq0"
-          ></abol-player>
-        </div>
-        <p id="player-status" class="mb-2" role="status">Loading player…</p>
-        <p id="caption-status" class="mb-2 text-body-secondary" role="status">
-          Configuring captions…
+      <section class="ak-section" aria-labelledby="api-heading">
+        <h2 id="api-heading">Caption API (optional, local HTTP)</h2>
+        <p class="intro">
+          Live caption generation uses <code>caption-api</code> + <code>generate-captions</code> against
+          <code id="api-base-label">http://16.16.124.190</code> (routes under <code>/api</code>).
+          Configure the origin with <code>window.ABOLKIT_CAPTION_API</code> before this script.
+          HTTPS GitHub Pages cannot call the HTTP API (mixed content) — no bypass.
         </p>
-        <div class="controls-row" aria-label="Programmatic player controls">
-          <button type="button" class="btn btn-sm btn-primary" id="btn-play">Play</button>
-          <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-pause">Pause</button>
-          <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-seek">Seek to 3s</button>
-        </div>
-        <p class="small text-body-secondary mb-0">
-          Package:
-          <a href="https://www.npmjs.com/package/@abolkit/player">@abolkit/player@0.1.1</a>
+        <p class="ak-meta mb-0">
+          Package docs:
+          <a href="https://abolkit.vercel.app/getting-started/#player-cdn">CDN quickstart</a>
           · API:
-          <a href="http://16.16.124.190/docs">http://16.16.124.190/api</a>
-          · Docs:
-          <a href="https://abolkit.vercel.app/getting-started/#player-cdn">Getting started (CDN)</a>
-        </p>
-        <p class="small text-body-secondary mt-2 mb-0">
-          Console notes: CDN service-worker registration failing cross-origin is expected and non-blocking.
-          Mixed-content errors on Pages mean the HTTP caption API was blocked — use localhost for live generation.
+          <a href="http://16.16.124.190/docs">http://16.16.124.190/docs</a>
         </p>
       </section>
     </main>
 
-    <script>
-      // Choose caption mode before the player upgrades the element.
-      ;(function () {
-        var player = document.getElementById('demo-player')
-        var captionEl = document.getElementById('caption-status')
-        var localHttp =
-          location.protocol === 'http:' &&
-          (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
-
-        if (localHttp) {
-          // Live generation — getting-started CDN + caption API (no manual tracks).
-          player.setAttribute('caption-api', 'http://16.16.124.190')
-          player.setAttribute('generate-captions', 'am om ti aa')
-          captionEl.textContent =
-            'Local HTTP: generating captions via http://16.16.124.190/api …'
-        } else {
-          // Pages/HTTPS: static VTT only (avoids mixed content; no bypass).
-          player.setAttribute('captions', '../assets/media/hisys-story-en.vtt')
-          player.setAttribute('captions-lang', 'en')
-          player.setAttribute('captions-label', 'English')
-          ;[
-            ['am', 'Amharic'],
-            ['om', 'Afaan Oromo'],
-            ['ti', 'Tigrinya'],
-            ['aa', 'Afar'],
-          ].forEach(function (pair) {
-            var track = document.createElement('track')
-            track.kind = 'captions'
-            track.srclang = pair[0]
-            track.label = pair[1]
-            track.src = '../assets/media/hisys-story-' + pair[0] + '.vtt'
-            player.appendChild(track)
-          })
-          captionEl.textContent =
-            'GitHub Pages (HTTPS): using pre-generated VTT. For API generation use http://localhost:8000.'
-        }
-      })()
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/@abolkit/player@0.1.1/dist/abol-player.js"></script>
     <script>
       ;(function () {
+        var CAPTION_API = String(window.ABOLKIT_CAPTION_API || 'http://16.16.124.190').replace(/\/+$/, '')
+        var apiLabel = document.getElementById('api-base-label')
+        if (apiLabel) apiLabel.textContent = CAPTION_API
+
+        var player = document.getElementById('showcase-player')
         var statusEl = document.getElementById('player-status')
         var captionEl = document.getElementById('caption-status')
-        var player = document.getElementById('demo-player')
         var ready = false
         var localHttp =
           location.protocol === 'http:' &&
@@ -180,63 +310,46 @@
           statusEl.classList.remove('ok', 'err')
           if (kind) statusEl.classList.add(kind)
         }
-
         function setCaptionStatus(text, kind) {
-          captionEl.textContent = text
+          captionEl.textContent = text || ''
           captionEl.classList.remove('ok', 'err', 'text-body-secondary')
+          if (!text) return
           if (kind === 'ok') captionEl.classList.add('ok')
           else if (kind === 'err') captionEl.classList.add('err')
           else captionEl.classList.add('text-body-secondary')
         }
 
+        try { localStorage.removeItem('abol-player-settings') } catch (_) {}
+
         if (!window.customElements || !customElements.get('abol-player')) {
-          setStatus('AbolKit script did not register <abol-player>. Check the CDN load.', 'err')
+          setStatus('CDN failed to register <abol-player>.', 'err')
           return
         }
 
-        try {
-          localStorage.removeItem('abol-player-settings')
-        } catch (_) {}
+        // Optional: live generation only on local HTTP (does not remove static EN/AM tracks already set).
+        // Host tracks for en/am win; API can still add other languages if generate-captions lists them.
+        // We keep static EN/AM for Pages reliability. Local users can open Settings / CC for package tracks.
+        if (localHttp) {
+          setCaptionStatus('Local HTTP: package tracks loaded. Caption API origin = ' + CAPTION_API + ' (optional).', null)
+        } else {
+          setCaptionStatus('Pages/HTTPS: using package sample VTT tracks (no HTTP caption-api call).', null)
+        }
 
         player.addEventListener('abol:ready', function (ev) {
           ready = true
           var engine = ev.detail && ev.detail.engine ? ev.detail.engine : 'unknown'
-          setStatus('Player ready (' + engine + ').', 'ok')
-          if (!localHttp) {
-            setCaptionStatus(
-              'Pre-generated VTT (en/am/om/ti/aa). Use the CC menu. Live API needs http://localhost:8000.',
-              'ok'
-            )
-          }
+          setStatus('Player ready (' + engine + '). Use keyboard, CC, Settings, Sign, and AD controls.', 'ok')
         })
-
         player.addEventListener('abol:error', function (ev) {
-          setStatus(
-            'Player error: ' + ((ev.detail && ev.detail.message) || 'unknown'),
-            'err'
-          )
+          setStatus('Player error: ' + ((ev.detail && ev.detail.message) || 'unknown'), 'err')
         })
-
         player.addEventListener('abol:captions', function (ev) {
           var d = ev.detail || {}
-          if (d.status === 'processing') {
-            setCaptionStatus('Caption API: generating transcript / translations…', null)
-          } else if (d.status === 'caption') {
-            setCaptionStatus(
-              'Caption ready: ' + (d.lang || '?') + ' (' + (d.kind || 'track') + ')',
-              'ok'
-            )
-          } else if (d.status === 'ready') {
-            var langs = Array.isArray(d.languages) ? d.languages.join(', ') : ''
-            setCaptionStatus(
-              langs
-                ? 'Captions ready (' + langs + '). Use the CC menu.'
-                : 'Caption API: ready.',
-              'ok'
-            )
-          } else if (d.status === 'failed' || d.status === 'error') {
-            setCaptionStatus('Caption API error: ' + (d.message || 'failed'), 'err')
-          }
+          if (d.status === 'processing') setCaptionStatus('Caption API generating…', null)
+          else if (d.status === 'caption') setCaptionStatus('API caption ready: ' + (d.lang || ''), 'ok')
+          else if (d.status === 'ready') setCaptionStatus('Caption API ready.', 'ok')
+          else if (d.status === 'error' || d.status === 'failed')
+            setCaptionStatus('Caption API: ' + (d.message || 'failed'), 'err')
         })
 
         document.getElementById('btn-play').addEventListener('click', function () {
@@ -246,12 +359,10 @@
           })
         })
         document.getElementById('btn-pause').addEventListener('click', function () {
-          if (!ready) return
-          player.pause()
+          if (ready) player.pause()
         })
         document.getElementById('btn-seek').addEventListener('click', function () {
-          if (!ready) return
-          player.seek(3)
+          if (ready) player.seek(2)
         })
       })()
     </script>
