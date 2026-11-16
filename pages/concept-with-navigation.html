@@ -579,8 +579,6 @@
                         id="concept-abol-player"
                         lang="en"
                         src="https://www.youtube.com/watch?v=HisYsqqszq0"
-                        caption-api="http://16.16.124.190"
-                        generate-captions="am om ti aa"
                         style="display: block; width: 100%; --abol-max-width: 100%"
                       ></abol-player>
                     </div>
@@ -1312,6 +1310,37 @@ alert(example);
     <script src="../assets/js/popper.js"></script>
     <script src="../assets/js/bootstrap.bundle.js"></script>
     <script src="../assets/js/static-page.js"></script>
+    <script>
+      // Local HTTP → caption API; GitHub Pages HTTPS → pre-generated VTT (no mixed-content bypass).
+      ;(function () {
+        var player = document.getElementById('concept-abol-player')
+        if (!player) return
+        var localHttp =
+          location.protocol === 'http:' &&
+          (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+        if (localHttp) {
+          player.setAttribute('caption-api', 'http://16.16.124.190')
+          player.setAttribute('generate-captions', 'am om ti aa')
+        } else {
+          player.setAttribute('captions', '../assets/media/hisys-story-en.vtt')
+          player.setAttribute('captions-lang', 'en')
+          player.setAttribute('captions-label', 'English')
+          ;[
+            ['am', 'Amharic'],
+            ['om', 'Afaan Oromo'],
+            ['ti', 'Tigrinya'],
+            ['aa', 'Afar'],
+          ].forEach(function (pair) {
+            var track = document.createElement('track')
+            track.kind = 'captions'
+            track.srclang = pair[0]
+            track.label = pair[1]
+            track.src = '../assets/media/hisys-story-' + pair[0] + '.vtt'
+            player.appendChild(track)
+          })
+        }
+      })()
+    </script>
     <!-- AbolKit player CDN (@0.1.1) — https://abolkit.vercel.app/getting-started/#player-cdn -->
     <script src="https://cdn.jsdelivr.net/npm/@abolkit/player@0.1.1/dist/abol-player.js"></script>
     <script>
@@ -1326,9 +1355,13 @@ alert(example);
         try {
           localStorage.removeItem('abol-player-settings')
         } catch (_) {}
+        var localHttp =
+          location.protocol === 'http:' &&
+          (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
         player.addEventListener('abol:ready', function () {
-          statusEl.textContent =
-            'Player ready — captions are generated from the caption API (not assets/*.vtt).'
+          statusEl.textContent = localHttp
+            ? 'Player ready — captions generate from the caption API.'
+            : 'Player ready — pre-generated VTT (Pages/HTTPS).'
         })
         player.addEventListener('abol:error', function (ev) {
           statusEl.textContent =
