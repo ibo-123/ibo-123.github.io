@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AbolKit player demo | Savanna static pages</title>
+    <link rel="stylesheet" href="../assets/css/application_alx.css" media="all" />
+    <link rel="stylesheet" href="../assets/css/app.css" media="all" />
+    <link rel="stylesheet" href="../assets/css/static-page.css" media="all" />
+    <style>
+      body {
+        padding: 2rem 1rem 3rem;
+      }
+      .demo-wrap {
+        max-width: 52rem;
+      }
+      .player-shell {
+        background: #0a0e12;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        margin: 1rem 0 0.75rem;
+      }
+      abol-player {
+        display: block;
+        width: 100%;
+        --abol-max-width: 100%;
+        --abol-accent: #0d6efd;
+        --abol-bg: #0a0e12;
+        --abol-fg: #f4f7f5;
+      }
+      .feature-list {
+        margin: 0;
+        padding-left: 1.25rem;
+      }
+      .feature-list li {
+        margin-bottom: 0.35rem;
+      }
+      #player-status.ok {
+        color: var(--bs-success, #198754);
+      }
+      #player-status.err {
+        color: var(--bs-danger, #dc3545);
+      }
+      .controls-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 0.75rem 0 1.25rem;
+      }
+    </style>
+    <!-- Documented CDN install: https://abolkit.vercel.app/install/player/ — pin @0.1.1 -->
+    <script src="https://cdn.jsdelivr.net/npm/@abolkit/player@0.1.1/dist/abol-player.js"></script>
+  </head>
+  <body class="bg-body-tertiary">
+    <main class="container-lg demo-wrap">
+      <p class="mb-2">
+        <a href="../index.html">← Savanna static pages</a>
+      </p>
+
+      <h1 class="mb-1">AbolKit player</h1>
+      <p class="text-body-secondary mb-4">
+        Demonstration of the published <code>&lt;abol-player&gt;</code> web component inside the ALX
+        Savanna static pages starter — no custom player build and no application backend.
+      </p>
+
+      <section class="mb-4" aria-labelledby="about-heading">
+        <h2 id="about-heading" class="h5">What AbolKit does</h2>
+        <p class="mb-2">
+          AbolKit provides an accessible, embeddable video player as a standard custom element.
+          Load the pinned CDN script, set a media <code>src</code>, and optionally attach caption
+          tracks. Playback, seeking, volume, and caption UI ship with the component.
+        </p>
+      </section>
+
+      <section class="mb-4" aria-labelledby="features-heading">
+        <h2 id="features-heading" class="h5">Features shown here</h2>
+        <ul class="feature-list">
+          <li>Video playback from a short public CC0 sample (MDN flower clip)</li>
+          <li>Play / pause, seeking, and volume via the built-in controls</li>
+          <li>Caption display from WebVTT files hosted with this site</li>
+          <li>Caption language selection (English and Amharic tracks)</li>
+          <li>Responsive layout that fills the page content width on desktop and mobile</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="player-heading">
+        <h2 id="player-heading" class="h5">Player</h2>
+        <div class="player-shell">
+          <abol-player
+            id="demo-player"
+            lang="en"
+            src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm"
+            captions="../assets/media/abol-demo-en.vtt"
+            captions-lang="en"
+            captions-label="English"
+          >
+            <track
+              kind="captions"
+              srclang="am"
+              label="Amharic"
+              src="../assets/media/abol-demo-am.vtt"
+            />
+          </abol-player>
+        </div>
+        <p id="player-status" class="mb-2" role="status">Loading player…</p>
+        <div class="controls-row" aria-label="Programmatic player controls">
+          <button type="button" class="btn btn-sm btn-primary" id="btn-play">Play</button>
+          <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-pause">Pause</button>
+          <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-seek">Seek to 3s</button>
+        </div>
+        <p class="small text-body-secondary mb-0">
+          Package:
+          <a href="https://www.npmjs.com/package/@abolkit/player">@abolkit/player@0.1.1</a>
+          · Docs:
+          <a href="https://abolkit.vercel.app/install/player/">abolkit.vercel.app</a>
+        </p>
+      </section>
+    </main>
+
+    <script>
+      ;(function () {
+        var statusEl = document.getElementById('player-status')
+        var player = document.getElementById('demo-player')
+        var ready = false
+
+        function setStatus(text, kind) {
+          statusEl.textContent = text
+          statusEl.classList.remove('ok', 'err')
+          if (kind) statusEl.classList.add(kind)
+        }
+
+        if (!window.customElements || !customElements.get('abol-player')) {
+          setStatus('AbolKit script did not register <abol-player>. Check the CDN load.', 'err')
+          return
+        }
+
+        player.addEventListener('abol:ready', function (ev) {
+          ready = true
+          var engine = ev.detail && ev.detail.engine ? ev.detail.engine : 'unknown'
+          setStatus('Player ready (' + engine + '). Use the controls or the buttons below.', 'ok')
+        })
+
+        player.addEventListener('abol:error', function (ev) {
+          var msg = (ev.detail && ev.detail.message) || 'Unknown player error'
+          setStatus('Player error: ' + msg, 'err')
+        })
+
+        document.getElementById('btn-play').addEventListener('click', function () {
+          if (!ready) return
+          player.play().catch(function (err) {
+            setStatus('Play failed: ' + (err && err.message ? err.message : err), 'err')
+          })
+        })
+        document.getElementById('btn-pause').addEventListener('click', function () {
+          if (!ready) return
+          player.pause()
+        })
+        document.getElementById('btn-seek').addEventListener('click', function () {
+          if (!ready) return
+          player.seek(3)
+        })
+
+        // Fallback if abol:ready is delayed
+        setTimeout(function () {
+          if (!ready && !statusEl.classList.contains('err')) {
+            setStatus('Waiting for player… If this persists, check the network tab for the CDN script.', null)
+          }
+        }, 8000)
+      })()
+    </script>
+  </body>
+</html>
