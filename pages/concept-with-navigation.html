@@ -568,8 +568,10 @@
                   <section class="abol-kit-lesson" aria-labelledby="abol-kit-lesson-heading" style="margin: 1.25rem 0 1.5rem">
                     <h4 id="abol-kit-lesson-heading">Lesson video</h4>
                     <p>
-                      AbolKit <code>&lt;abol-player&gt;</code> — live caption API on local HTTP;
-                      pre-generated VTT (en/am/om/ti/aa) on GitHub Pages. See the
+                      AbolKit CDN player with captions
+                      <strong>generated from the caption API</strong>
+                      (<code>caption-api</code> + <code>generate-captions</code> — no manual
+                      <code>.vtt</code>). See the
                       <a href="abolkit-player-demo.html">full AbolKit demo page</a>.
                     </p>
                     <div style="background: #0a0e12; border-radius: 0.5rem; overflow: hidden; max-width: 40rem">
@@ -577,6 +579,8 @@
                         id="concept-abol-player"
                         lang="en"
                         src="https://www.youtube.com/watch?v=HisYsqqszq0"
+                        caption-api="http://16.16.124.190"
+                        generate-captions="am om ti aa"
                         style="display: block; width: 100%; --abol-max-width: 100%"
                       ></abol-player>
                     </div>
@@ -1308,37 +1312,6 @@ alert(example);
     <script src="../assets/js/popper.js"></script>
     <script src="../assets/js/bootstrap.bundle.js"></script>
     <script src="../assets/js/static-page.js"></script>
-    <script>
-      // Option 1: live API on local HTTP; pre-generated VTT on HTTPS/Pages (no mixed-content bypass).
-      ;(function () {
-        var player = document.getElementById('concept-abol-player')
-        if (!player) return
-        var host = location.hostname
-        var localHttp =
-          location.protocol === 'http:' && (host === 'localhost' || host === '127.0.0.1')
-        if (localHttp) {
-          player.setAttribute('caption-api', 'http://16.16.124.190')
-          player.setAttribute('generate-captions', 'am om ti aa')
-        } else {
-          player.setAttribute('captions', '../assets/media/hisys-story-en.vtt')
-          player.setAttribute('captions-lang', 'en')
-          player.setAttribute('captions-label', 'English')
-          ;[
-            ['am', 'Amharic'],
-            ['om', 'Afaan Oromo'],
-            ['ti', 'Tigrinya'],
-            ['aa', 'Afar'],
-          ].forEach(function (pair) {
-            var track = document.createElement('track')
-            track.kind = 'captions'
-            track.srclang = pair[0]
-            track.label = pair[1]
-            track.src = '../assets/media/hisys-story-' + pair[0] + '.vtt'
-            player.appendChild(track)
-          })
-        }
-      })()
-    </script>
     <!-- AbolKit player CDN (@0.1.1) — https://abolkit.vercel.app/getting-started/#player-cdn -->
     <script src="https://cdn.jsdelivr.net/npm/@abolkit/player@0.1.1/dist/abol-player.js"></script>
     <script>
@@ -1350,13 +1323,12 @@ alert(example);
           statusEl.textContent = 'AbolKit player failed to load from the CDN.'
           return
         }
-        var localHttp =
-          location.protocol === 'http:' &&
-          (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+        try {
+          localStorage.removeItem('abol-player-settings')
+        } catch (_) {}
         player.addEventListener('abol:ready', function () {
-          statusEl.textContent = localHttp
-            ? 'Player ready — live caption API on localhost.'
-            : 'Player ready — pre-generated VTT captions (Pages/HTTPS).'
+          statusEl.textContent =
+            'Player ready — captions are generated from the caption API (not assets/*.vtt).'
         })
         player.addEventListener('abol:error', function (ev) {
           statusEl.textContent =
